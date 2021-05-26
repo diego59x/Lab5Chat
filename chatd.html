@@ -1,0 +1,150 @@
+<html>
+   <head>
+	   <script>
+		   const tittle = document.createElement('title')
+			document.title = "Chat D"
+	   </script>
+   </head>
+	<body>
+		<script type="application/javascript">
+            // cambiar color de fondo 
+            function changeBackground(color) {
+                    document.body.style.background = color;
+            }
+            window.addEventListener("load",function() { changeBackground('#6E092F') });
+
+            // ir hasta la barra de mensajes
+            const pageScroll =  () =>{
+                    var body = document.body
+                    var a = body.scrollHeight
+                    window.scrollBy(0,a); // scroll cada 100 px
+                    //scrolldelay = setTimeout('pageScroll()',1); // Scroll cada milisegundo
+            }
+            // quitar margen al body
+            document.body.style.cssText = "margin: 0"
+
+            // creacion de divs con sus atributos
+            const div1 = document.createElement("div")
+            div1.setAttribute("id","div_1")
+            div1.style.position = "fixed";
+            div1.style.top = "0px";
+            div1.style.height = "100px"
+            div1.style.width ="100%"
+            div1.style.backgroundColor = "#FA146C"
+            document.body.append(div1)
+            const text = document.createElement("h1")
+            text.align = "center"
+            text.append("Pink Signal")
+            div1.append(text)
+
+
+
+            const div2 = document.createElement("div")
+            div2.setAttribute("id","div_2")
+      
+            document.body.append(div2)
+
+            const div3 = document.createElement("div")
+            div3.setAttribute("id","div_3")
+            div3.style.height = "70px";
+            div3.style.width ="100%";
+            div3.style.position = "fixed";
+            div3.style.bottom = "0px";
+            div3.style.backgroundColor = "rgba(110,9,47,0.5)";
+            document.body.append(div3)
+
+           
+
+            // creacion de variable de almacenamiento de variables
+            const listaDeMensajes = document.createElement('p')
+            div2.append(listaDeMensajes)
+            // solicitud de mensajes
+            
+            fetch('http://ubeje.xyz:3000/messages').then((r) => {
+                return r.json()
+                }).then((j) => {
+                    
+                j.forEach((mensaje) => {
+                // creacion de mensajes
+                const unMensaje = document.createElement('p')
+                const p1 = document.createElement('p')
+                const p2 = document.createElement('p')
+                p1.style.fontWeight = "bold"
+                p1.append(mensaje.sender)
+                p2.append(mensaje.message)
+                
+                var verf = mensaje.message 
+                   
+    
+                const imagen = document.createElement('img')
+                imagen.src = mensaje.message
+                imagen.onload = function(){
+                    unMensaje.append(imagen);
+                }
+                
+                imagen.onerror = function(){
+                    if (mensaje.sender === "Diego Alvarez"){
+                        unMensaje.align = "Right";
+                        unMensaje.style.right ="10px";
+                    }else{
+                        unMensaje.align = "left";
+                        unMensaje.style.left ="10px";
+                    }             
+                }
+                if (mensaje.sender === "Diego Alvarez"){
+                    unMensaje.align = "Right";
+                    unMensaje.style.backgroundColor = "#AD0E4C";
+                }else{
+                    unMensaje.style.backgroundColor = "#D4115C";
+                }
+                unMensaje.append(p1);
+                unMensaje.append(p2);
+                
+                unMensaje.style.borderLeft ="10px";
+                listaDeMensajes.append(unMensaje)
+                
+                }) 
+            } 
+            ).then((a) => pageScroll())
+
+            // creacion de input y botton de enviar mensaje
+            const input = document.createElement('input')
+            input.maxLength = 140;
+            input.style.width = "100%";
+            input.style.height = "30px";
+            input.style.position = "fixed";
+            input.style.bottom = "20px";
+            input.style.backgroundColor = "#6E092F";
+            input.style.borderRadius = "10px";
+            input.style.borderColor = "black";
+            input.setAttribute("id", "input1")
+            div3.append(input)
+            
+            
+
+
+           
+            // enviar mensaje al .json
+            
+            document.addEventListener('keypress', (event) => {
+                const keyName = event.key;
+                if(keyName === "Enter"){
+                    fetch('http://ubeje.xyz:3000/messages', { 
+                    method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                            sender: "Diego Alvarez",
+                            message: input.value,
+                            date: '2021-02-12:18:56',
+                            })
+                })
+            }
+          
+            }); 
+
+		</script>
+
+	</body>
+</html>
